@@ -89,3 +89,13 @@ When you're sending a pull request:
 - Review the documentation to make sure it looks good.
 - Follow the pull request template when opening a pull request.
 - For pull requests that change the API or implementation, discuss with maintainers first by opening an issue.
+
+## Releasing
+
+Releases are automated with [Changesets](https://github.com/changesets/changesets) and npm trusted publishing (`.github/workflows/release.yml`).
+
+1. In a PR that changes the published package, run `yarn changeset`, choose the bump (patch, minor or major) and describe the change for users. Commit the generated file in `.changeset/`.
+2. When that PR merges to `main`, the Release workflow opens a "Version packages" PR that bumps the version and updates `CHANGELOG.md`.
+3. Merging the "Version packages" PR publishes the new version to npm with provenance and tags it. A version already on npm is skipped, so the workflow is safe to re-run.
+
+**One-time setup (first release):** a trusted publisher can only be configured for a package that exists on npm, so publish `0.1.0` by hand once (`npm login`, then `npm publish --access public`). Then, on npmjs.com, open the package → Settings → Trusted Publisher and add GitHub Actions for repository `transxactfj/transxact-react-native` and workflow `release.yml`. From then on no npm token is needed.

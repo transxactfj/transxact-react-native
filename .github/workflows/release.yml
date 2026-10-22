@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions:
+  contents: write
+  pull-requests: write
+  # npm trusted publishing (OIDC) and provenance.
+  id-token: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      - name: Use the npm registry
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+          registry-url: https://registry.npmjs.org/
+
+      # Trusted publishing needs npm 11.5.1 or later. Pinned to the 11 line so a new npm major can't break
+      # releases unannounced.
+      - name: Update npm
+        run: npm install -g npm@^11.5.1
+
+      - name: Typecheck, test, build, check the package
+        run: yarn ci
+
+      # Opens a "Version packages" PR while changesets are pending; once that PR is merged, publishes the
+      # new version (a version already on npm is skipped).
+      - name: Version or publish
+        uses: changesets/action@v1
+        with:
+          version: yarn changeset version
+          publish: yarn release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
