@@ -65,7 +65,7 @@
     "jest": "^29.7.0",
     "react": "19.3.0",
     "react-native": "0.88.0",
-    "react-native-builder-bob": "^0.44.1",
+    "react-native-builder-bob": "^0.43.2",
     "turbo": "^2.11.10",
     "typescript": "^6.0.3"
   },
