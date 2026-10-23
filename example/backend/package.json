@@ -1,0 +1,12 @@
+{
+    "name": "transxact-react-native-example-backend",
+    "private": true,
+    "type": "module",
+    "description": "A minimal Merchant backend for the @transxact/react-native example app. Not part of the package.",
+    "scripts": {
+        "start": "node server.mjs"
+    },
+    "dependencies": {
+        "@transxact/node": "^0.5.11"
+    }
+}
